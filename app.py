@@ -72,11 +72,13 @@ def load_user(user_id):
 from views.auth import auth_bp
 from views.news import news_bp
 from views.gallery import gallery_bp
+from views.comments import bp as comments_bp
 
 # Registra os blueprints com URLs específicas
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(news_bp, url_prefix='/news')
 app.register_blueprint(gallery_bp, url_prefix='/gallery')
+app.register_blueprint(comments_bp)
 
 # Rota principal
 @app.route('/')

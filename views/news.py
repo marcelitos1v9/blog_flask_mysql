@@ -18,7 +18,7 @@ def index():
 @news_bp.route('/<int:id>')
 def view(id):
     news = News.query.get_or_404(id)
-    return render_template('news/view.html', news=news)
+    return render_template('news/show.html', news=news)
 
 @news_bp.route('/create', methods=['GET', 'POST'])
 @login_required

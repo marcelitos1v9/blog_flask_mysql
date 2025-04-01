@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('news.index') }}">Notícias</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ news.title }}</li>
+            </ol>
+        </nav>
+
+        <article class="card mb-4">
+            {% if news.formatted_image_path %}
+            <img src="{{ url_for('static', filename=news.formatted_image_path) }}" class="card-img-top" alt="{{ news.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ news.title }}</h1>
+                <div class="text-muted mb-3">
+                    <small>
+                        <i class="fas fa-user me-1"></i>{{ news.author.username }}
+                        <i class="fas fa-calendar ms-3 me-1"></i>{{ news.formatted_date }}
+                    </small>
+                </div>
+                <div class="card-text">
+                    {{ news.content | safe }}
+                </div>
+            </div>
+        </article>
+
+        <!-- Seção de Comentários -->
+        <section class="comments-section">
+            <h3 class="mb-4">
+                <i class="fas fa-comments me-2"></i>Comentários
+                <span class="badge bg-primary ms-2">{{ news.comments|length }}</span>
+            </h3>
+
+            {% if current_user.is_authenticated %}
+            <form action="{{ url_for('comments.create_comment', news_id=news.id) }}" method="POST" class="mb-4">
+                <div class="form-group">
+                    <textarea name="content" class="form-control" rows="3" placeholder="Deixe seu comentário..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">
+                    <i class="fas fa-paper-plane me-1"></i>Comentar
+                </button>
+            </form>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <a href="{{ url_for('auth.login') }}" class="alert-link">Faça login</a> para deixar um comentário.
+            </div>
+            {% endif %}
+
+            <div class="comments-list">
+                {% for comment in news.comments|sort(attribute='created_at', reverse=true) %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="card-subtitle mb-1">
+                                    <i class="fas fa-user me-1"></i>{{ comment.user.username }}
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ comment.formatted_date }}
+                                </small>
+                            </div>
+                            {% if current_user.is_authenticated and (current_user.is_admin or comment.user_id == current_user.id) %}
+                            <form action="{{ url_for('comments.delete_comment', comment_id=comment.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        <p class="card-text mt-2">{{ comment.content }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>Nenhum comentário ainda. Seja o primeiro a comentar!
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} 
