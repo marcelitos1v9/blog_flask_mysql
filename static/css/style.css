@@ -1,98 +1,254 @@
-* {
-  color: black;
-  margin: 5px;
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-color: #2c3e50;
+    --light-gray: #f8f9fa;
+    --dark-gray: #343a40;
+    --white: #ffffff;
 }
 
-/* Estilos gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-gray);
 }
 
-.footer {
-    margin-top: auto;
+/* Navbar */
+.navbar {
+    background-color: var(--primary-color) !important;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Estilos para cards de notícias */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white) !important;
+}
+
+.nav-link {
+    color: var(--white) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color) !important;
+}
+
+.nav-link.active {
+    color: var(--secondary-color) !important;
+    font-weight: 600;
+}
+
+/* Cards */
 .card {
-    transition: transform 0.2s;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--white);
+    margin-bottom: 2rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .card-img-top {
-    height: 200px;
-    object-fit: cover;
-}
-
-/* Estilos para a galeria */
-.gallery-card img {
     height: 250px;
     object-fit: cover;
+    border-radius: 10px 10px 0 0;
 }
 
-/* Estilos para formulários */
-.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+.card-body {
+    padding: 1.5rem;
 }
 
-/* Estilos para botões */
+.card-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Galeria */
+.gallery-card {
+    transition: all 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.gallery-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.gallery-card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.gallery-card .card-text {
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+
+/* Botões */
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
 .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
 .btn-primary:hover {
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
+    background-color: #2980b9;
+    border-color: #2980b9;
 }
 
-/* Estilos para alertas */
+.btn-danger {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.btn-info {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-info:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    color: var(--white);
+}
+
+/* Formulários */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Alertas */
 .alert {
-    margin-bottom: 1rem;
-    border-radius: 0.25rem;
+    border-radius: 5px;
+    border: none;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Estilos para a navbar */
-.navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 2rem;
 }
 
-.navbar-brand {
-    font-weight: bold;
+.breadcrumb-item a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-/* Estilos para imagens responsivas */
-.img-fluid {
-    max-width: 100%;
-    height: auto;
+.breadcrumb-item a:hover {
+    color: var(--primary-color);
 }
 
-/* Estilos para o container principal */
+.breadcrumb-item.active {
+    color: var(--text-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+/* Container */
 .container {
     padding-top: 2rem;
     padding-bottom: 2rem;
 }
 
-/* Estilos para títulos */
+/* Títulos */
 h1, h2, h3, h4, h5, h6 {
-    color: #333;
-    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
 }
 
-/* Estilos para links */
+/* Links */
 a {
-    color: #0d6efd;
+    color: var(--secondary-color);
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #0a58ca;
-    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .card-img-top {
+        height: 200px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .gallery-card .card-img-top {
+        height: 180px;
+    }
 }

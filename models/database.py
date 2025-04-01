@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+
 # Criando uma instância do SQLAlchemy
 db = SQLAlchemy()
 

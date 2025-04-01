@@ -31,10 +31,22 @@
                     <div class="card-text">
                         {{ news.content | safe }}
                     </div>
+                    {% if news.gallery_images %}
+                    <div class="mt-4">
+                        <a href="{{ url_for('gallery.news_gallery', news_id=news.id) }}" class="btn btn-info">
+                            <i class="fas fa-images me-2"></i>Ver Galeria de Imagens
+                        </a>
+                    </div>
+                    {% endif %}
                     {% if current_user.is_authenticated and current_user.is_admin %}
                     <div class="mt-4">
-                        <a href="{{ url_for('news.edit', id=news.id) }}" class="btn btn-warning">Editar</a>
-                        <a href="{{ url_for('news.delete', id=news.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta notícia?')">Excluir</a>
+                        <a href="{{ url_for('news.edit', id=news.id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                        <a href="{{ url_for('news.delete', id=news.id) }}" class="btn btn-danger" 
+                           onclick="return confirm('Tem certeza que deseja excluir esta notícia?')">
+                            <i class="fas fa-trash me-2"></i>Excluir
+                        </a>
                     </div>
                     {% endif %}
                 </div>

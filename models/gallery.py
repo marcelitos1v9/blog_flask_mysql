@@ -1,10 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 import hashlib
-from .user import db
-
-db = SQLAlchemy()
+from .database import db
 
 class Gallery(db.Model):
     __tablename__ = 'gallery'
@@ -15,7 +12,9 @@ class Gallery(db.Model):
     image_path = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
     uploader = db.relationship('User', backref=db.backref('gallery', lazy=True))
+    news = db.relationship('News', backref=db.backref('gallery_images', lazy=True))
     
     @staticmethod
     def generate_unique_filename(original_filename):

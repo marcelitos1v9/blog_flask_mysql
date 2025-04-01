@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 from models.gallery import Gallery, db
+from models.news import News
 
 gallery_bp = Blueprint('gallery', __name__)
 
@@ -12,8 +13,11 @@ def allowed_file(filename):
 
 @gallery_bp.route('/')
 def index():
+    # Obtém todas as imagens ordenadas por data de criação
     images = Gallery.query.order_by(Gallery.created_at.desc()).all()
-    return render_template('gallery/index.html', images=images)
+    # Obtém todas as notícias para o formulário de upload
+    news = News.query.order_by(News.created_at.desc()).all()
+    return render_template('gallery/index.html', images=images, news=news)
 
 @gallery_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -49,7 +53,8 @@ def upload():
                 title=request.form.get('title', 'Sem título'),
                 description=request.form.get('description'),
                 image_path=f'uploads/{filename}',  # Caminho relativo para o template
-                uploaded_by=current_user.id
+                uploaded_by=current_user.id,
+                news_id=request.form.get('news_id')  # ID da notícia vinculada
             )
             
             try:
@@ -66,7 +71,10 @@ def upload():
             return redirect(url_for('gallery.index'))
             
         flash('Tipo de arquivo não permitido', 'danger')
-    return render_template('gallery/upload.html')
+    
+    # Obtém todas as notícias para o formulário
+    news = News.query.order_by(News.created_at.desc()).all()
+    return render_template('gallery/upload.html', news=news)
 
 @gallery_bp.route('/delete/<int:id>')
 @login_required
@@ -90,4 +98,11 @@ def delete(id):
         db.session.rollback()
         flash('Erro ao excluir a imagem.', 'danger')
         
-    return redirect(url_for('gallery.index')) 
+    return redirect(url_for('gallery.index'))
+
+@gallery_bp.route('/news/<int:news_id>')
+def news_gallery(news_id):
+    # Obtém todas as imagens vinculadas a uma notícia específica
+    images = Gallery.query.filter_by(news_id=news_id).order_by(Gallery.created_at.desc()).all()
+    news = News.query.get_or_404(news_id)
+    return render_template('gallery/news_gallery.html', images=images, news=news) 

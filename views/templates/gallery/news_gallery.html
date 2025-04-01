@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Galeria de Imagens - Blog de Notícias{% endblock %}
+{% block title %}Galeria - {{ news.title }} - Blog de Notícias{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -8,7 +8,9 @@
         <div class="col-12">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Galeria</li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('gallery.index') }}">Galeria</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('news.view', id=news.id) }}">{{ news.title }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Imagens</li>
                 </ol>
             </nav>
         </div>
@@ -16,14 +18,7 @@
 
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="text-center mb-4">Galeria de Imagens</h1>
-            {% if current_user.is_authenticated and current_user.is_admin %}
-            <div class="text-center mb-4">
-                <a href="{{ url_for('gallery.upload') }}" class="btn btn-primary">
-                    <i class="fas fa-upload me-2"></i>Upload de Imagem
-                </a>
-            </div>
-            {% endif %}
+            <h1 class="text-center mb-4">Imagens da Notícia: {{ news.title }}</h1>
         </div>
     </div>
 
@@ -40,13 +35,6 @@
                             Por {{ image.uploader.username }} em {{ image.created_at.strftime('%d/%m/%Y %H:%M') }}
                         </small>
                     </p>
-                    {% if image.news %}
-                    <p class="card-text">
-                        <a href="{{ url_for('news.view', id=image.news.id) }}" class="text-decoration-none">
-                            <i class="fas fa-newspaper me-1"></i>Notícia: {{ image.news.title }}
-                        </a>
-                    </p>
-                    {% endif %}
                     {% if current_user.is_authenticated and current_user.is_admin %}
                     <div class="mt-3">
                         <a href="{{ url_for('gallery.delete', id=image.id) }}" class="btn btn-danger btn-sm" 
@@ -61,10 +49,18 @@
         {% else %}
         <div class="col-12">
             <div class="alert alert-info">
-                Nenhuma imagem encontrada na galeria.
+                Nenhuma imagem encontrada para esta notícia.
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('news.view', id=news.id) }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para a Notícia
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %} 

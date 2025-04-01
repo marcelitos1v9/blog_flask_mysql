@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from models.user import db, User
+from models.user import User
+from models.database import db
 import os
 from dotenv import load_dotenv
 import pymysql
@@ -73,9 +73,10 @@ from views.auth import auth_bp
 from views.news import news_bp
 from views.gallery import gallery_bp
 
-app.register_blueprint(auth_bp)
-app.register_blueprint(news_bp)
-app.register_blueprint(gallery_bp)
+# Registra os blueprints com URLs específicas
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(news_bp, url_prefix='/news')
+app.register_blueprint(gallery_bp, url_prefix='/gallery')
 
 # Rota principal
 @app.route('/')
