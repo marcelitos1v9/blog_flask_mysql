@@ -1,0 +1,98 @@
+* {
+  color: black;
+  margin: 5px;
+}
+
+/* Estilos gerais */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Estilos para cards de notícias */
+.card {
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Estilos para a galeria */
+.gallery-card img {
+    height: 250px;
+    object-fit: cover;
+}
+
+/* Estilos para formulários */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+}
+
+/* Estilos para botões */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Estilos para alertas */
+.alert {
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+}
+
+/* Estilos para a navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Estilos para imagens responsivas */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Estilos para o container principal */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Estilos para títulos */
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para links */
+a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}

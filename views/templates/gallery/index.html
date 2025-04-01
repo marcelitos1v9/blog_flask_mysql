@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Galeria - Blog de Notícias{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Galeria de Imagens</h1>
+    </div>
+</div>
+
+<div class="row">
+    {% for image in images %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{{ url_for('static', filename=image.image_path) }}" class="card-img-top" alt="{{ image.title }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ image.title }}</h5>
+                {% if image.description %}
+                <p class="card-text">{{ image.description }}</p>
+                {% endif %}
+                <p class="card-text"><small class="text-muted">Enviado por {{ image.uploader.username }} em {{ image.created_at.strftime('%d/%m/%Y %H:%M') }}</small></p>
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                <div class="btn-group">
+                    <a href="{{ url_for('gallery.delete', id=image.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta imagem?')">Excluir</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center">Nenhuma imagem encontrada.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

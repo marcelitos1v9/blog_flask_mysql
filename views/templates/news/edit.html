@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Notícia - Blog de Notícias{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Editar Notícia</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ news.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Conteúdo</label>
+                        <textarea class="form-control" id="content" name="content" rows="10" required>{{ news.content }}</textarea>
+                    </div>
+                    {% if news.image_path %}
+                    <div class="mb-3">
+                        <label class="form-label">Imagem Atual</label>
+                        <img src="{{ url_for('static', filename=news.image_path) }}" class="img-fluid mb-2" alt="{{ news.title }}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remove_image" name="remove_image">
+                            <label class="form-check-label" for="remove_image">
+                                Remover imagem atual
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Nova Imagem (opcional)</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <a href="{{ url_for('news.index') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

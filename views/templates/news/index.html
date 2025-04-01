@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Notícias - Blog de Notícias{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>Notícias</h1>
+        {% if current_user.is_authenticated and current_user.is_admin %}
+        <a href="{{ url_for('news.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nova Notícia
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    {% for news in news_list %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            {% if news.formatted_image_path %}
+            <img src="{{ url_for('static', filename=news.formatted_image_path) }}" class="card-img-top" alt="{{ news.title }}">
+            {% else %}
+            <img src="{{ url_for('static', filename='images/default-news.jpg') }}" class="card-img-top" alt="Imagem padrão">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ news.title }}</h5>
+                <p class="card-text">{{ news.content[:200] }}...</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        Por {{ news.author.username }} em {{ news.formatted_date }}
+                    </small>
+                </p>
+                <div class="btn-group">
+                    <a href="{{ url_for('news.view', id=news.id) }}" class="btn btn-sm btn-primary">Ler mais</a>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <a href="{{ url_for('news.edit', id=news.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{{ url_for('news.delete', id=news.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta notícia?')">Excluir</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center">Nenhuma notícia encontrada.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

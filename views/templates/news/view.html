@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }} - Blog de Notícias{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('news.index') }}">Notícias</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ news.title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <article class="card">
+                {% if news.formatted_image_path %}
+                <img src="{{ url_for('static', filename=news.formatted_image_path) }}" class="card-img-top" alt="{{ news.title }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/default-news.jpg') }}" class="card-img-top" alt="Imagem padrão">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ news.title }}</h1>
+                    <p class="card-text text-muted">
+                        Por {{ news.author.username }} em {{ news.formatted_date }}
+                    </p>
+                    <div class="card-text">
+                        {{ news.content | safe }}
+                    </div>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <div class="mt-4">
+                        <a href="{{ url_for('news.edit', id=news.id) }}" class="btn btn-warning">Editar</a>
+                        <a href="{{ url_for('news.delete', id=news.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta notícia?')">Excluir</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock %} 
