@@ -35,7 +35,7 @@ Um sistema de blog de notícias desenvolvido com Flask, MySQL e SQLAlchemy, incl
 
 1. Clone o repositório:
 ```bash
-git clone ['https://github.com/marcelitos1v9/blog_flask_mysql']
+git clone https://github.com/marcelitos1v9/blog_flask_mysql
 cd blog_flask_mysql
 ```
 
