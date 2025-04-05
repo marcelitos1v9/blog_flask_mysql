@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_required, current_user
 from models.news import News
 from models.user import db
+from models.like import Like
 import os
 from werkzeug.utils import secure_filename
 
@@ -18,7 +19,7 @@ def index():
 @news_bp.route('/<int:id>')
 def view(id):
     news = News.query.get_or_404(id)
-    return render_template('news/show.html', news=news)
+    return render_template('news/view.html', news=news)
 
 @news_bp.route('/create', methods=['GET', 'POST'])
 @login_required

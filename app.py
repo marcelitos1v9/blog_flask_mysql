@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for
 from flask_login import LoginManager
 from models.user import User
 from models.database import db
+from models.like import Like
 import os
 import pymysql
 from sqlalchemy import create_engine
@@ -103,12 +104,14 @@ from views.auth import auth_bp
 from views.news import news_bp
 from views.gallery import gallery_bp
 from views.comments import bp as comments_bp
+from views.likes import likes_bp
 
 # Registra os blueprints com URLs específicas
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(news_bp, url_prefix='/news')
 app.register_blueprint(gallery_bp, url_prefix='/gallery')
 app.register_blueprint(comments_bp)
+app.register_blueprint(likes_bp)
 
 # Rota principal
 @app.route('/')
