@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
 from models.comment import Comment
 from models.news import News
-from models.database import db
+from config.database import db
 
 bp = Blueprint('comments', __name__)
 
@@ -22,10 +22,14 @@ def create_comment(news_id):
         news_id=news_id
     )
     
-    db.session.add(comment)
-    db.session.commit()
+    try:
+        db.session.add(comment)
+        db.session.commit()
+        flash('Comentário adicionado com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Erro ao adicionar comentário', 'danger')
     
-    flash('Comentário adicionado com sucesso!', 'success')
     return redirect(url_for('news.view', id=news_id))
 
 @bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
@@ -34,9 +38,13 @@ def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     
     if current_user.is_admin or comment.user_id == current_user.id:
-        db.session.delete(comment)
-        db.session.commit()
-        flash('Comentário removido com sucesso!', 'success')
+        try:
+            db.session.delete(comment)
+            db.session.commit()
+            flash('Comentário removido com sucesso!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash('Erro ao remover comentário', 'danger')
     else:
         flash('Você não tem permissão para excluir este comentário', 'danger')
     

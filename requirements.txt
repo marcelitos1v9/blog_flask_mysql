@@ -3,3 +3,9 @@ Flask-SQLAlchemy
 Flask-Login
 mysqlclient
 Werkzeug
+Pillow
+python-dotenv
+PyMySQL
+SQLAlchemy
+Flask-WTF
+email-validator

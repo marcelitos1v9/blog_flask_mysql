@@ -2,10 +2,11 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
-from models.gallery import Gallery, db
+from models.gallery import Gallery
 from models.news import News
+from config.database import db
 
-gallery_bp = Blueprint('gallery', __name__)
+gallery_bp = Blueprint('gallery', __name__, url_prefix='/gallery')
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}

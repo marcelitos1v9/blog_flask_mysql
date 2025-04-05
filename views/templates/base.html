@@ -18,6 +18,59 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Flash Messages Styles -->
+    <style>
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .flash-message {
+            min-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: none;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flash-message.success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+        }
+
+        .flash-message.danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .flash-message.warning {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: white;
+        }
+
+        .flash-message.info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+
+        .icon-container {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .flash-message .btn-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -88,23 +141,26 @@
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
-                            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show flash-message {{ category }}" 
+                                 role="alert">
                                 <div class="d-flex align-items-center">
-                                    {% if category == 'success' %}
-                                        <i class="fas fa-check-circle me-2"></i>
-                                    {% elif category == 'danger' %}
-                                        <i class="fas fa-exclamation-circle me-2"></i>
-                                    {% elif category == 'warning' %}
-                                        <i class="fas fa-exclamation-triangle me-2"></i>
-                                    {% else %}
-                                        <i class="fas fa-info-circle me-2"></i>
-                                    {% endif %}
-                                    <div>
-                                        <strong>{{ message.split(':')[0] if ':' in message else '' }}</strong>
-                                        {{ message.split(':')[1] if ':' in message else message }}
+                                    <div class="icon-container me-3">
+                                        {% if category == 'success' %}
+                                            <i class="fas fa-check-circle" style="font-size: 1.3rem;"></i>
+                                        {% elif category == 'danger' %}
+                                            <i class="fas fa-exclamation-circle" style="font-size: 1.3rem;"></i>
+                                        {% elif category == 'warning' %}
+                                            <i class="fas fa-exclamation-triangle" style="font-size: 1.3rem;"></i>
+                                        {% else %}
+                                            <i class="fas fa-info-circle" style="font-size: 1.3rem;"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <strong style="display: block; margin-bottom: 3px; font-size: 1.1rem;">{{ message.split(':')[0] if ':' in message else '' }}</strong>
+                                        <span style="font-size: 0.9rem; opacity: 0.9;">{{ message.split(':')[1] if ':' in message else message }}</span>
                                     </div>
                                 </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         {% endfor %}
                     {% endif %}
@@ -132,6 +188,33 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Flash Messages Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            
+            flashMessages.forEach(function(message) {
+                // Adiciona animação de entrada
+                message.style.opacity = '0';
+                message.style.transform = 'translateX(100px) scale(0.9)';
+                
+                setTimeout(() => {
+                    message.style.opacity = '1';
+                    message.style.transform = 'translateX(0) scale(1)';
+                }, 100);
+
+                // Remove a mensagem após 4 segundos
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100px) scale(0.9)';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 4000);
+            });
+        });
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>

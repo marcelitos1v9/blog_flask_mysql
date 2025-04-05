@@ -1,3 +1,6 @@
+# Este arquivo foi movido para config/database.py
+# Por favor, use from config.database import db
+
 from flask_sqlalchemy import SQLAlchemy
 
 # Criando uma instância do SQLAlchemy
