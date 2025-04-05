@@ -132,6 +132,3 @@ blog_flask_mysql/
 
 Se encontrar algum problema ou tiver dúvidas, abra uma issue no repositório do projeto.
 
-## Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes. 
