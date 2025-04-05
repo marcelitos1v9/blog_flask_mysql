@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from .database import db
+from config.database import db
 
 class News(db.Model):
     __tablename__ = 'news'

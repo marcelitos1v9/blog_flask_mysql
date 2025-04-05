@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 import hashlib
-from .database import db
+from config.database import db
 
 class Gallery(db.Model):
     __tablename__ = 'gallery'

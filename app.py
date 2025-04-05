@@ -1,11 +1,15 @@
-from flask import Flask, redirect, url_for
-from flask_login import LoginManager
-from models.user import User
-from models.database import db
-from models.like import Like
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
 import os
-import pymysql
-from sqlalchemy import create_engine
+from datetime import datetime
+from views.auth import auth_bp
+from views.news import news_bp
+from views.comments import bp as comments_bp
+from views.likes import likes_bp
+from views.gallery import gallery_bp
+from models.user import User
+from config.database import db, SQLALCHEMY_DATABASE_URI, recreate_database, init_db
 
 app = Flask(__name__, 
     static_folder='static',  # Define a pasta static na raiz
@@ -14,7 +18,7 @@ app = Flask(__name__,
 )
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/blog_news'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui-123456'  # Chave secreta para sessões
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
@@ -22,73 +26,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
 
 # Garantir que a pasta de uploads existe
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-def recreate_database():
-    """Recria o banco de dados e todas as tabelas"""
-    try:
-        # Conecta ao MySQL sem selecionar banco de dados
-        connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='',
-            charset='utf8mb4'
-        )
-        
-        with connection.cursor() as cursor:
-            # Remove o banco de dados se existir
-            cursor.execute("DROP DATABASE IF EXISTS blog_news")
-            connection.commit()
-            
-            # Cria o banco de dados
-            cursor.execute("CREATE DATABASE blog_news")
-            connection.commit()
-            
-            # Seleciona o banco de dados
-            cursor.execute("USE blog_news")
-            
-            # Cria as tabelas usando SQLAlchemy
-            with app.app_context():
-                db.create_all()
-                
-        connection.close()
-        print("Banco de dados e tabelas recriados com sucesso!")
-        
-    except pymysql.Error as e:
-        print(f"Erro ao recriar o banco de dados: {e}")
-        raise
-
-def create_database():
-    """Cria o banco de dados se não existir"""
-    try:
-        # Conecta ao MySQL sem selecionar banco de dados
-        connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='',
-            charset='utf8mb4'
-        )
-        
-        with connection.cursor() as cursor:
-            # Cria o banco de dados se não existir
-            cursor.execute("CREATE DATABASE IF NOT EXISTS blog_news")
-            connection.commit()
-            
-            # Seleciona o banco de dados
-            cursor.execute("USE blog_news")
-            
-            # Cria as tabelas usando SQLAlchemy
-            with app.app_context():
-                db.create_all()
-                
-        connection.close()
-        print("Banco de dados e tabelas criados com sucesso!")
-        
-    except pymysql.Error as e:
-        print(f"Erro ao criar o banco de dados: {e}")
-        raise
-
-# Inicialização do banco de dados
-db.init_app(app)
 
 # Configuração do Flask-Login
 login_manager = LoginManager()
@@ -99,19 +36,16 @@ login_manager.login_view = 'auth.login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Registro dos blueprints
-from views.auth import auth_bp
-from views.news import news_bp
-from views.gallery import gallery_bp
-from views.comments import bp as comments_bp
-from views.likes import likes_bp
-
-# Registra os blueprints com URLs específicas
+# Registra os blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(news_bp, url_prefix='/news')
-app.register_blueprint(gallery_bp, url_prefix='/gallery')
 app.register_blueprint(comments_bp)
 app.register_blueprint(likes_bp)
+app.register_blueprint(gallery_bp, url_prefix='/gallery')
+
+# Função para verificar extensões permitidas
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Rota principal
 @app.route('/')
@@ -119,8 +53,8 @@ def index():
     return redirect(url_for('news.index'))  # Redireciona para a página de notícias
 
 if __name__ == '__main__':
-    # Recria o banco de dados e as tabelas
-    recreate_database()
+    # Inicializa o banco de dados e cria as tabelas se necessário
+    init_db(app)
     
     # Inicia o servidor
     app.run(host='0.0.0.0', port=4000, debug=True)
