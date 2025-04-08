@@ -21,8 +21,11 @@ class News(db.Model):
     def formatted_image_path(self):
         if not self.image_path:
             return None
-        # Garante que o caminho use barras normais
-        return self.image_path.replace('\\', '/')
+        # Garante que o caminho use barras normais e comece com 'uploads/'
+        path = self.image_path.replace('\\', '/')
+        if not path.startswith('uploads/'):
+            path = f'uploads/{path}'
+        return path
         
     @property
     def formatted_date(self):

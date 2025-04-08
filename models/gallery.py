@@ -12,9 +12,9 @@ class Gallery(db.Model):
     image_path = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id', ondelete='CASCADE'))
     uploader = db.relationship('User', backref=db.backref('gallery', lazy=True))
-    news = db.relationship('News', backref=db.backref('gallery_images', lazy=True))
+    news = db.relationship('News', backref=db.backref('gallery_images', lazy=True, cascade='all, delete-orphan'))
     
     @staticmethod
     def generate_unique_filename(original_filename):

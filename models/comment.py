@@ -8,11 +8,11 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id', ondelete='CASCADE'), nullable=False)
     
     # Relacionamentos
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
-    news = db.relationship('News', backref=db.backref('comments', lazy=True))
+    news = db.relationship('News', backref=db.backref('comments', lazy=True, cascade='all, delete-orphan'))
     
     def __repr__(self):
         return f'<Comment {self.id}>'
